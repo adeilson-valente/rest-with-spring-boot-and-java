@@ -1,27 +1,29 @@
-package br.com.demo.data.vo.v1;
+package br.com.demo.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.Objects;
 
-@JsonPropertyOrder({"id", "fist_name", "last_name", "address", "gender"})
-public class PersonVO implements Serializable {
+@Entity
+@Table(name = "person")
+public class Person implements Serializable {
     private  static  final long serialVersionUID = 1L;
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @JsonProperty("fist_name")/*Nome em que vai aparecer no json*/
-    private String firstName;
-    @JsonProperty("last_name")
+
+    @Column(name = "fistname", nullable = false, length = 80)
+    private String first;
+    @Column(name = "lastname", nullable = false, length = 80)
     private String lastName;
+    @Column(nullable = false, length = 100)
     private String address;
-    @JsonIgnore/*Omite o campo no Json*/
+    @Column(nullable = false, length = 6)
     private String gender;
 
-    public PersonVO(){
+    public Person(){
 
     }
 
@@ -34,11 +36,11 @@ public class PersonVO implements Serializable {
     }
 
     public String getFirstName() {
-        return firstName;
+        return first;
     }
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
+    public void setFirstName(String first) {
+        this.first = first;
     }
 
     public String getLastName() {
@@ -68,7 +70,7 @@ public class PersonVO implements Serializable {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof PersonVO person)) return false;
+        if (!(o instanceof Person person)) return false;
         return Objects.equals(getId(), person.getId()) && Objects.equals(getFirstName(), person.getFirstName()) && Objects.equals(getLastName(), person.getLastName()) && Objects.equals(getAddress(), person.getAddress()) && Objects.equals(getGender(), person.getGender());
     }
 
