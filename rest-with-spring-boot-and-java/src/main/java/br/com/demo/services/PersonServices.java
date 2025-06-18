@@ -36,9 +36,9 @@ public class PersonServices {
         logger.info("Finding one person!");
         var entity =  repository.findById(id).orElseThrow(() -> new ResourceNotFoundExeption(" No records found for this ID!"));
 
-        PersonDTO vo = DozerMapper.parseObject(entity, PersonDTO.class);
-        vo.add(linkTo(methodOn(PersonController.class).findById(id)).withSelfRel());
-        return vo;
+        PersonDTO dto = DozerMapper.parseObject(entity, PersonDTO.class);
+        dto.add(linkTo(methodOn(PersonController.class).findById(id)).withSelfRel());
+        return dto;
     }
 
     public PersonDTO createPerson(PersonDTO person){
@@ -50,9 +50,9 @@ public class PersonServices {
 
         var entity = DozerMapper.parseObject(person, Person.class);
 
-        var vo = DozerMapper.parseObject(repository.save(entity), PersonDTO.class);
-        vo.add(linkTo(methodOn(PersonController.class).findById(vo.getKey())).withSelfRel());
-        return vo;
+        var dto = DozerMapper.parseObject(repository.save(entity), PersonDTO.class);
+        dto.add(linkTo(methodOn(PersonController.class).findById(dto.getKey())).withSelfRel());
+        return dto;
     }
 
     public PersonDTO updatePerson(PersonDTO person){
@@ -69,9 +69,9 @@ public class PersonServices {
         entity.setAddress(person.getAddress());
         entity.setGender(person.getGender());
 
-        var vo = DozerMapper.parseObject(repository.save(entity), PersonDTO.class);
-        vo.add(linkTo(methodOn(PersonController.class).findById(vo.getKey())).withSelfRel());
-        return vo;
+        var dto = DozerMapper.parseObject(repository.save(entity), PersonDTO.class);
+        dto.add(linkTo(methodOn(PersonController.class).findById(dto.getKey())).withSelfRel());
+        return dto;
     }
 
     public void delete(Long id){

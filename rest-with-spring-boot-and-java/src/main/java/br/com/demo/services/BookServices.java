@@ -8,18 +8,19 @@ import br.com.demo.exeptions.ResourceNotFoundExeption;
 import br.com.demo.mapper.DozerMapper;
 import br.com.demo.model.Book;
 import br.com.demo.repositories.BookRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
 public class BookServices {
-    private Logger logger = Logger.getLogger(BookServices.class.getName());
+    private Logger logger = LoggerFactory.getLogger(BookServices.class.getName());
 
     @Autowired
     private BookRepository repository;
@@ -37,9 +38,9 @@ public class BookServices {
         logger.info("Finding one book!");
         var entity =  repository.findById(id).orElseThrow(() -> new ResourceNotFoundExeption(" No records found for this ID!"));
 
-        BookDTO vo = DozerMapper.parseObject(entity, BookDTO.class);
-        vo.add(linkTo(methodOn(BookController.class).findById(id)).withSelfRel());
-        return vo;
+        BookDTO dto = DozerMapper.parseObject(entity, BookDTO.class);
+        dto.add(linkTo(methodOn(BookController.class).findById(id)).withSelfRel());
+        return dto;
     }
 
     public BookDTO create(BookDTO person){
@@ -51,9 +52,9 @@ public class BookServices {
 
         var entity = DozerMapper.parseObject(person, Book.class);
 
-        var vo = DozerMapper.parseObject(repository.save(entity), BookDTO.class);
-        vo.add(linkTo(methodOn(PersonController.class).findById(vo.getKey())).withSelfRel());
-        return vo;
+        var dto = DozerMapper.parseObject(repository.save(entity), BookDTO.class);
+        dto.add(linkTo(methodOn(PersonController.class).findById(dto.getKey())).withSelfRel());
+        return dto;
     }
 
     public BookDTO update(BookDTO person){
@@ -70,9 +71,9 @@ public class BookServices {
         entity.setPrice(person.getPrice());
         entity.setTitle(person.getTitle());
 
-        var vo = DozerMapper.parseObject(repository.save(entity), BookDTO.class);
-        vo.add(linkTo(methodOn(BookController.class).findById(vo.getKey())).withSelfRel());
-        return vo;
+        var dto = DozerMapper.parseObject(repository.save(entity), BookDTO.class);
+        dto.add(linkTo(methodOn(BookController.class).findById(dto.getKey())).withSelfRel());
+        return dto;
     }
 
     public void delete(Long id){
