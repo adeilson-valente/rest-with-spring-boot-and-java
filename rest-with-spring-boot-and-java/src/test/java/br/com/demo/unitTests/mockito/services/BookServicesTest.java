@@ -1,10 +1,8 @@
 package br.com.demo.unitTests.mockito.services;
 
-import br.com.demo.data.vo.v1.BookVO;
-import br.com.demo.data.vo.v1.PersonVO;
+import br.com.demo.data.dto.v1.BookDTO;
 import br.com.demo.exeptions.RequiredObjectIsNullExeption;
 import br.com.demo.model.Book;
-import br.com.demo.model.Person;
 import br.com.demo.repositories.BookRepository;
 import br.com.demo.services.BookServices;
 import br.com.demo.unitTests.mapper.mocks.MockBook;
@@ -86,7 +84,7 @@ public class BookServicesTest {
         Book persisted = person;
         persisted.setId(1L);
 
-        BookVO vo = input.mockVO(1);
+        BookDTO vo = input.mockVO(1);
         vo.setKey(1L);
 
         when(repository.save(person)).thenReturn(persisted);
@@ -110,7 +108,7 @@ public class BookServicesTest {
 
         Book persisted = entity;
 
-        BookVO vo = input.mockVO(1);
+        BookDTO vo = input.mockVO(1);
         vo.setKey(1L);
 
         when(repository.findById(1L)).thenReturn(Optional.of(entity));

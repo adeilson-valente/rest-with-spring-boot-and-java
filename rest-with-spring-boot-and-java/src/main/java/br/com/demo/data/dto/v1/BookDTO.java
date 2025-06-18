@@ -1,4 +1,4 @@
-package br.com.demo.data.vo.v1;
+package br.com.demo.data.dto.v1;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.Date;
 
 @JsonPropertyOrder({"id", "author", "launchDate", "price", "title"})
-public class BookVO extends RepresentationModel<BookVO> implements Serializable {
+public class BookDTO extends RepresentationModel<BookDTO> implements Serializable {
     private  static  final long serialVersionUID = 1L;
 
     @JsonProperty("id")
@@ -24,7 +24,7 @@ public class BookVO extends RepresentationModel<BookVO> implements Serializable 
 
     private String title;
 
-    public BookVO(){
+    public BookDTO(){
 
     }
 
@@ -71,7 +71,7 @@ public class BookVO extends RepresentationModel<BookVO> implements Serializable 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof BookVO book)) return false;
+        if (!(o instanceof BookDTO book)) return false;
 
         if (Double.compare(book.getPrice(), getPrice()) != 0) return false;
         if (getKey() != null ? !getKey().equals(book.getKey()) : book.getKey() != null) return false;

@@ -1,6 +1,6 @@
 package br.com.demo.unitTests.mockito.services;
 
-import br.com.demo.data.vo.v1.PersonVO;
+import br.com.demo.data.dto.v1.PersonDTO;
 import br.com.demo.exeptions.RequiredObjectIsNullExeption;
 import br.com.demo.model.Person;
 import br.com.demo.repositories.PersonRepository;
@@ -84,7 +84,7 @@ public class PersonServicesTest {
         Person persisted = person;
         persisted.setId(1L);
 
-        PersonVO vo = input.mockVO(1);
+        PersonDTO vo = input.mockDTO(1);
         vo.setKey(1L);
 
         when(repository.save(person)).thenReturn(persisted);
@@ -108,7 +108,7 @@ public class PersonServicesTest {
 
         Person persisted = person;
 
-        PersonVO vo = input.mockVO(1);
+        PersonDTO vo = input.mockDTO(1);
         vo.setKey(1L);
 
         when(repository.findById(1L)).thenReturn(Optional.of(person));

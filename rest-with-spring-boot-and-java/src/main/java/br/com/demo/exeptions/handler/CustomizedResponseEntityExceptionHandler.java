@@ -1,4 +1,4 @@
-package br.com.demo.handler;
+package br.com.demo.exeptions.handler;
 
 import br.com.demo.exeptions.ExceptionResponse;
 import br.com.demo.exeptions.RequiredObjectIsNullExeption;
@@ -28,6 +28,7 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
     }
+
     @ExceptionHandler(RequiredObjectIsNullExeption.class)
     public final ResponseEntity<ExceptionResponse> handleBadRequestExceptions(Exception ex, WebRequest request){
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));

@@ -15,11 +15,14 @@ public class Person implements Serializable {
     private Long id;
 
     @Column(name = "fistname", nullable = false, length = 80)
-    private String first;
+    private String firstName;
+
     @Column(name = "lastname", nullable = false, length = 80)
     private String lastName;
+
     @Column(nullable = false, length = 100)
     private String address;
+
     @Column(nullable = false, length = 6)
     private String gender;
 
@@ -36,11 +39,11 @@ public class Person implements Serializable {
     }
 
     public String getFirstName() {
-        return first;
+        return firstName;
     }
 
-    public void setFirstName(String first) {
-        this.first = first;
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public String getLastName() {

@@ -1,15 +1,13 @@
-package br.com.demo.data.vo.v1;
+package br.com.demo.data.dto.v1;
 
 import com.fasterxml.jackson.annotation.*;
 import com.github.dozermapper.core.Mapping;
-import jakarta.persistence.*;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 @JsonPropertyOrder({"id", "firstName", "lastName", "address", "gender"})
-public class PersonVO extends RepresentationModel<PersonVO> implements Serializable {
+public class PersonDTO extends RepresentationModel<PersonDTO> implements Serializable {
     private  static  final long serialVersionUID = 1L;
 
     @JsonProperty("id")
@@ -20,7 +18,7 @@ public class PersonVO extends RepresentationModel<PersonVO> implements Serializa
     private String address;
     private String gender;
 
-    public PersonVO(){
+    public PersonDTO(){
 
     }
 
@@ -67,7 +65,7 @@ public class PersonVO extends RepresentationModel<PersonVO> implements Serializa
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof PersonVO personVO)) return false;
+        if (!(o instanceof PersonDTO personVO)) return false;
         if (!super.equals(o)) return false;
 
         if (getKey() != null ? !getKey().equals(personVO.getKey()) : personVO.getKey() != null) return false;
