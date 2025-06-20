@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin()
 @RestController
 @RequestMapping("/api/v1/person")
 @Tag(name = "People", description = "Endpoints for Managing People")
@@ -43,6 +44,12 @@ public class PersonController implements PersonControllerDocs {
     @Override
     public PersonDTO update(@RequestBody PersonDTO person){
         return service.updatePerson(person);
+    }
+
+    @PatchMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE})
+    @Override
+    public PersonDTO disablePerson(@PathVariable(value = "id") Long id){
+        return service.disablePerson(id);
     }
 
     @Operation(summary = "Deletes a Person",

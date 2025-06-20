@@ -18,7 +18,6 @@
 		<dozer.version>7.0.0</dozer.version>
 		<springdoc.version>2.7.0</springdoc.version>
 		<testcontainers.version>1.20.4</testcontainers.version>
-		<rest-assured.version>4.5.0</rest-assured.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -78,7 +77,6 @@
 		<dependency>
 			<groupId>io.rest-assured</groupId>
 			<artifactId>rest-assured</artifactId>
-			<version>${rest-assured.version}</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>

@@ -1,5 +1,5 @@
 package br.com.demo.configs;
 
-public class TestConfigs {
-    public static final int SERVER_PORT = 8888;
+public interface TestConfigs {
+    int SERVER_PORT = 8888;
 }

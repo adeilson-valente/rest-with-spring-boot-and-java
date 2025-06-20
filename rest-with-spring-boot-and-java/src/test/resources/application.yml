@@ -8,9 +8,13 @@ spring:
       ddl-auto: none
     properties:
       hibernate:
-        dialect: org.hibernate.dialect.MySQL8Dialect
     show-sql: false
+    open-in-view: false
+logging:
+  level:
+    root: INFO # WARN | DEBUG | TRACE
+    # br.com.demo: DEBUG
 springdoc:
-  pathsToMatch: /api/**/v1**
+  pathsToMatch: /api/v1/**
   swagger-ui:
     use-root-path: true

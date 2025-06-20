@@ -7,11 +7,14 @@ import br.com.demo.exeptions.ResourceNotFoundExeption;
 import br.com.demo.mapper.DozerMapper;
 import br.com.demo.model.Person;
 import br.com.demo.repositories.PersonRepository;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -23,7 +26,7 @@ public class PersonServices {
     @Autowired
     private PersonRepository repository;
 
-    public List<PersonDTO> findAll(){
+    public List<PersonDTO> findAll() {
         logger.info("Finding all people!");
         var persons = DozerMapper.parseListObjects(repository.findAll(), PersonDTO.class);
 
@@ -32,17 +35,17 @@ public class PersonServices {
         return persons;
     }
 
-    public PersonDTO findById(Long id){
+    public PersonDTO findById(Long id) {
         logger.info("Finding one person!");
-        var entity =  repository.findById(id).orElseThrow(() -> new ResourceNotFoundExeption(" No records found for this ID!"));
+        var entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundExeption(" No records found for this ID!"));
 
         PersonDTO dto = DozerMapper.parseObject(entity, PersonDTO.class);
         addHateoasLinks(dto);
         return dto;
     }
 
-    public PersonDTO createPerson(PersonDTO person){
-        if(person == null){
+    public PersonDTO createPerson(PersonDTO person) {
+        if (person == null) {
             throw new RequiredObjectIsNullExeption();
         }
 
@@ -55,8 +58,8 @@ public class PersonServices {
         return dto;
     }
 
-    public PersonDTO updatePerson(PersonDTO person){
-        if(person == null){
+    public PersonDTO updatePerson(PersonDTO person) {
+        if (person == null) {
             throw new RequiredObjectIsNullExeption();
         }
 
@@ -74,7 +77,19 @@ public class PersonServices {
         return dto;
     }
 
-    public void delete(Long id){
+    @Transactional
+    public PersonDTO disablePerson(Long id) {
+        logger.info("Desabling one person!");
+        repository.findById(id).orElseThrow(() -> new ResourceNotFoundExeption(" No records found for this ID!"));
+
+        repository.disablePerson(id);
+        var entity = repository.findById(id).get();
+        var dto = DozerMapper.parseObject(entity, PersonDTO.class);
+        addHateoasLinks(dto);
+        return dto;
+    }
+
+    public void delete(Long id) {
         logger.info("Deleting one person!");
         var entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundExeption(" No records found for this ID!"));
         repository.delete(entity);
@@ -85,6 +100,7 @@ public class PersonServices {
         dto.add(linkTo(methodOn(PersonController.class).findAll()).withRel("findAll").withType("GET"));
         dto.add(linkTo(methodOn(PersonController.class).create(dto)).withRel("create").withType("POST"));
         dto.add(linkTo(methodOn(PersonController.class).update(dto)).withRel("update").withType("PUT"));
+        dto.add(linkTo(methodOn(PersonController.class).disablePerson(dto.getKey())).withRel("disable").withType("PATCH"));
         dto.add(linkTo(methodOn(PersonController.class).delete(dto.getKey())).withRel("delete").withType("DELETE"));
     }
 }
