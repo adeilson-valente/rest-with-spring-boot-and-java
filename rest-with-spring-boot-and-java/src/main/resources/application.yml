@@ -16,6 +16,6 @@ logging:
     root: INFO # WARN | DEBUG | TRACE
     # br.com.demo: DEBUG
 springdoc:
-  pathsToMatch: /api/**/v1**
+  pathsToMatch: /api/v1/**
   swagger-ui:
     use-root-path: true

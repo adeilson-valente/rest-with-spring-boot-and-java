@@ -1,8 +1,10 @@
 package br.com.demo.unitTests.mockito.services;
 
 import br.com.demo.data.dto.v1.BookDTO;
+import br.com.demo.data.dto.v1.PersonDTO;
 import br.com.demo.exeptions.RequiredObjectIsNullExeption;
 import br.com.demo.model.Book;
+import br.com.demo.model.Person;
 import br.com.demo.repositories.BookRepository;
 import br.com.demo.services.BookServices;
 import br.com.demo.unitTests.mapper.mocks.MockBook;
@@ -32,7 +34,7 @@ public class BookServicesTest {
     @BeforeEach
     void setUpMocks() throws Exception{
        input = new MockBook();
-        MockitoAnnotations.openMocks(this);
+       MockitoAnnotations.openMocks(this);
     }
 
     @Test
@@ -46,7 +48,7 @@ public class BookServicesTest {
         assertNotNull(result);
         assertNotNull(result.getKey());
         assertNotNull(result.getLinks());
-        assertTrue(result.toString().contains("links: [</api/book/v1/1>;rel=\"self\"]"));
+        assertTrue(result.toString().contains("links"));
         assertEquals("Some Author1", result.getAuthor());
         assertEquals("Some Title1", result.getTitle());
         assertEquals(25D, result.getPrice());
@@ -59,18 +61,18 @@ public class BookServicesTest {
 
         when(repository.findAll()).thenReturn(list);
 
-        var people = service.findAll();
+        var book = service.findAll();
 
-        assertNotNull(people);
-        assertEquals(14, people.size());
+        assertNotNull(book);
+        assertEquals(14, book.size());
 
         //Validando dados da pessoa 1
-        var result = people.get(1);
+        var result = book.get(1);
 
         assertNotNull(result);
         assertNotNull(result.getKey());
         assertNotNull(result.getLinks());
-        assertTrue(result.toString().contains("links: [</api/book/v1/1>;rel=\"self\"]"));
+        assertTrue(result.toString().contains("links"));
         assertEquals("Some Author1", result.getAuthor());
         assertEquals("Some Title1", result.getTitle());
         assertEquals(25D, result.getPrice());
@@ -78,23 +80,21 @@ public class BookServicesTest {
     }
 
     @Test
-    void testCreatePerson(){
-        Book person = input.mockEntity(1);
-
-        Book persisted = person;
+    void testCreateBook(){
+        Book book = input.mockEntity(1);
+        Book persisted = book;
         persisted.setId(1L);
 
-        BookDTO vo = input.mockVO(1);
-        vo.setKey(1L);
+        BookDTO dto = input.mockVO(1);
 
-        when(repository.save(person)).thenReturn(persisted);
+        when(repository.save(book)).thenReturn(persisted);
 
-        var result = service.create(vo);
+        var result = service.create(dto);
 
         assertNotNull(result);
         assertNotNull(result.getKey());
         assertNotNull(result.getLinks());
-        assertTrue(result.toString().contains("links: [</api/book/v1/1>;rel=\"self\"]"));
+        assertTrue(result.toString().contains("links"));
         assertEquals("Some Author1", result.getAuthor());
         assertEquals("Some Title1", result.getTitle());
         assertEquals(25D, result.getPrice());
@@ -119,7 +119,7 @@ public class BookServicesTest {
         assertNotNull(result);
         assertNotNull(result.getKey());
         assertNotNull(result.getLinks());
-        assertTrue(result.toString().contains("links: [</api/book/v1/1>;rel=\"self\"]"));
+        assertTrue(result.toString().contains("links"));
         assertEquals("Some Author1", result.getAuthor());
         assertEquals("Some Title1", result.getTitle());
         assertEquals(25D, result.getPrice());

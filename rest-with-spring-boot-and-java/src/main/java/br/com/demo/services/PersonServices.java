@@ -1,6 +1,6 @@
 package br.com.demo.services;
 
-import br.com.demo.controller.PersonController;
+import br.com.demo.api.v1.controller.PersonController;
 import br.com.demo.data.dto.v1.PersonDTO;
 import br.com.demo.exeptions.RequiredObjectIsNullExeption;
 import br.com.demo.exeptions.ResourceNotFoundExeption;
@@ -27,7 +27,7 @@ public class PersonServices {
         logger.info("Finding all people!");
         var persons = DozerMapper.parseListObjects(repository.findAll(), PersonDTO.class);
 
-        persons.stream().forEach(p -> p.add(linkTo(methodOn(PersonController.class).findById(p.getKey())).withSelfRel()));
+        persons.forEach(this::addHateoasLinks);
 
         return persons;
     }
@@ -37,7 +37,7 @@ public class PersonServices {
         var entity =  repository.findById(id).orElseThrow(() -> new ResourceNotFoundExeption(" No records found for this ID!"));
 
         PersonDTO dto = DozerMapper.parseObject(entity, PersonDTO.class);
-        dto.add(linkTo(methodOn(PersonController.class).findById(id)).withSelfRel());
+        addHateoasLinks(dto);
         return dto;
     }
 
@@ -51,7 +51,7 @@ public class PersonServices {
         var entity = DozerMapper.parseObject(person, Person.class);
 
         var dto = DozerMapper.parseObject(repository.save(entity), PersonDTO.class);
-        dto.add(linkTo(methodOn(PersonController.class).findById(dto.getKey())).withSelfRel());
+        addHateoasLinks(dto);
         return dto;
     }
 
@@ -70,7 +70,7 @@ public class PersonServices {
         entity.setGender(person.getGender());
 
         var dto = DozerMapper.parseObject(repository.save(entity), PersonDTO.class);
-        dto.add(linkTo(methodOn(PersonController.class).findById(dto.getKey())).withSelfRel());
+        addHateoasLinks(dto);
         return dto;
     }
 
@@ -78,5 +78,13 @@ public class PersonServices {
         logger.info("Deleting one person!");
         var entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundExeption(" No records found for this ID!"));
         repository.delete(entity);
+    }
+
+    private void addHateoasLinks(PersonDTO dto) {
+        dto.add(linkTo(methodOn(PersonController.class).findById(dto.getKey())).withSelfRel().withType("GET"));
+        dto.add(linkTo(methodOn(PersonController.class).findAll()).withRel("findAll").withType("GET"));
+        dto.add(linkTo(methodOn(PersonController.class).create(dto)).withRel("create").withType("POST"));
+        dto.add(linkTo(methodOn(PersonController.class).update(dto)).withRel("update").withType("PUT"));
+        dto.add(linkTo(methodOn(PersonController.class).delete(dto.getKey())).withRel("delete").withType("DELETE"));
     }
 }
