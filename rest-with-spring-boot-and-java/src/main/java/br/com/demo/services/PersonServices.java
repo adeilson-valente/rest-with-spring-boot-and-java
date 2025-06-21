@@ -1,7 +1,7 @@
 package br.com.demo.services;
 
 import br.com.demo.api.v1.controller.PersonController;
-import br.com.demo.data.dto.v1.PersonDTO;
+import br.com.demo.data.dto.PersonDTO;
 import br.com.demo.exeptions.RequiredObjectIsNullExeption;
 import br.com.demo.exeptions.ResourceNotFoundExeption;
 import br.com.demo.mapper.DozerMapper;
@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.EntityModel;
@@ -23,8 +22,6 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class PersonServices {

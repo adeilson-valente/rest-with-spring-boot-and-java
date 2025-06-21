@@ -4,7 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.List;
 
-import br.com.demo.data.dto.v1.PersonDTO;
+import br.com.demo.data.dto.PersonDTO;
 import br.com.demo.mapper.DozerMapper;
 import br.com.demo.model.Person;
 import br.com.demo.unitTests.mapper.mocks.MockPerson;

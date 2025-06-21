@@ -1,4 +1,4 @@
-package br.com.demo.data.dto.v1;
+package br.com.demo.data.dto;
 
 import com.fasterxml.jackson.annotation.*;
 import com.github.dozermapper.core.Mapping;

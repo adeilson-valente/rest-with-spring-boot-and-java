@@ -1,6 +1,6 @@
 package br.com.demo.unitTests.mockito.services;
 
-import br.com.demo.data.dto.v1.PersonDTO;
+import br.com.demo.data.dto.PersonDTO;
 import br.com.demo.exeptions.RequiredObjectIsNullExeption;
 import br.com.demo.model.Person;
 import br.com.demo.repositories.PersonRepository;

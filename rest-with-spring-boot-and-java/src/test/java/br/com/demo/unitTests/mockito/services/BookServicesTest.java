@@ -1,10 +1,8 @@
 package br.com.demo.unitTests.mockito.services;
 
-import br.com.demo.data.dto.v1.BookDTO;
-import br.com.demo.data.dto.v1.PersonDTO;
+import br.com.demo.data.dto.BookDTO;
 import br.com.demo.exeptions.RequiredObjectIsNullExeption;
 import br.com.demo.model.Book;
-import br.com.demo.model.Person;
 import br.com.demo.repositories.BookRepository;
 import br.com.demo.services.BookServices;
 import br.com.demo.unitTests.mapper.mocks.MockBook;

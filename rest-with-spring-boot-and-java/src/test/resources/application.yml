@@ -1,5 +1,7 @@
 server:
   port: 8888
+file:
+  upload-dir: D:\upload
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -10,6 +12,12 @@ spring:
       hibernate:
     show-sql: false
     open-in-view: false
+  servlet:
+    multipart:
+      enabled: true
+      file-size-threshold: 2KB
+      max-file-size: 200MB
+      max-request-size: 215MB
 logging:
   level:
     root: INFO # WARN | DEBUG | TRACE

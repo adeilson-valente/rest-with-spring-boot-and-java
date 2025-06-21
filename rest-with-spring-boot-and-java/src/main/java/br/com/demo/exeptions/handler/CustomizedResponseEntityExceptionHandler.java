@@ -1,8 +1,6 @@
 package br.com.demo.exeptions.handler;
 
-import br.com.demo.exeptions.ExceptionResponse;
-import br.com.demo.exeptions.RequiredObjectIsNullExeption;
-import br.com.demo.exeptions.ResourceNotFoundExeption;
+import br.com.demo.exeptions.*;
 import jakarta.el.Expression;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -40,5 +38,17 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
     public final ResponseEntity<ExceptionResponse> handleRequiredObjectIsNullExeption(Exception ex, WebRequest request){
         ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
         return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(FileNotFoundExeption.class)
+    public final ResponseEntity<ExceptionResponse> handleFileNotFoundExeption(Exception ex, WebRequest request){
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(FileStorageExeption.class)
+    public final ResponseEntity<ExceptionResponse> handleFileStorageExeption(Exception ex, WebRequest request){
+        ExceptionResponse exceptionResponse = new ExceptionResponse(new Date(), ex.getMessage(), request.getDescription(false));
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

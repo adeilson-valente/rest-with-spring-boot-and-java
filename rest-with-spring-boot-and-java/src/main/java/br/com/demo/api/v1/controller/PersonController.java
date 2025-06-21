@@ -1,7 +1,7 @@
 package br.com.demo.api.v1.controller;
 
 import br.com.demo.api.v1.docs.PersonControllerDocs;
-import br.com.demo.data.dto.v1.PersonDTO;
+import br.com.demo.data.dto.PersonDTO;
 import br.com.demo.services.PersonServices;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -17,8 +17,6 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @CrossOrigin()
 @RestController

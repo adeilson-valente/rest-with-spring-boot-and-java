@@ -1,4 +1,4 @@
-package br.com.demo.data.dto.v1;
+package br.com.demo.data.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;

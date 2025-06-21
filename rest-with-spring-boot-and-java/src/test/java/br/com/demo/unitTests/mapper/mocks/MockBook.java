@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import br.com.demo.data.dto.v1.BookDTO;
+import br.com.demo.data.dto.BookDTO;
 import br.com.demo.model.Book;
 
 public class MockBook {

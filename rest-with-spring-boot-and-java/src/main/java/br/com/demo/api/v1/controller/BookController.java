@@ -1,7 +1,7 @@
 package br.com.demo.api.v1.controller;
 
 import br.com.demo.api.v1.docs.BookControllerDocs;
-import br.com.demo.data.dto.v1.BookDTO;
+import br.com.demo.data.dto.BookDTO;
 import br.com.demo.services.BookServices;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +13,6 @@ import org.springframework.hateoas.PagedModel;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/book")

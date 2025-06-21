@@ -1,9 +1,7 @@
 package br.com.demo.services;
 
 import br.com.demo.api.v1.controller.BookController;
-import br.com.demo.api.v1.controller.PersonController;
-import br.com.demo.data.dto.v1.BookDTO;
-import br.com.demo.data.dto.v1.PersonDTO;
+import br.com.demo.data.dto.BookDTO;
 import br.com.demo.exeptions.RequiredObjectIsNullExeption;
 import br.com.demo.exeptions.ResourceNotFoundExeption;
 import br.com.demo.mapper.DozerMapper;
@@ -19,8 +17,6 @@ import org.springframework.hateoas.Link;
 import org.springframework.hateoas.PagedModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
