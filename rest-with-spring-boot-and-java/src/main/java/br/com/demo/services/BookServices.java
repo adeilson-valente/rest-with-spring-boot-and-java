@@ -3,6 +3,7 @@ package br.com.demo.services;
 import br.com.demo.api.v1.controller.BookController;
 import br.com.demo.api.v1.controller.PersonController;
 import br.com.demo.data.dto.v1.BookDTO;
+import br.com.demo.data.dto.v1.PersonDTO;
 import br.com.demo.exeptions.RequiredObjectIsNullExeption;
 import br.com.demo.exeptions.ResourceNotFoundExeption;
 import br.com.demo.mapper.DozerMapper;
@@ -11,6 +12,12 @@ import br.com.demo.repositories.BookRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -25,26 +32,37 @@ public class BookServices {
     @Autowired
     private BookRepository repository;
 
-    public List<BookDTO> findAll(){
+    @Autowired
+    PagedResourcesAssembler<BookDTO> assembler;
+
+    public PagedModel<EntityModel<BookDTO>> findAll(Pageable pageable) {
         logger.info("Finding all book!");
-        var books = DozerMapper.parseListObjects(repository.findAll(), BookDTO.class);
 
-        books.forEach(this::addHateoasLinks);
+        var books = repository.findAll(pageable);
 
-        return books;
+        var peopleWithLinks = books.map(book -> {
+            BookDTO dto = DozerMapper.parseObject(book, BookDTO.class);
+            addHateoasLinks(dto);
+            return dto;
+        });
+
+        Link findAllLink = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(BookController.class)
+                .findAll(pageable.getPageNumber(), pageable.getPageSize(), String.valueOf(pageable.getSort()))).withSelfRel();
+
+        return assembler.toModel(peopleWithLinks, findAllLink);
     }
 
-    public BookDTO findById(Long id){
+    public BookDTO findById(Long id) {
         logger.info("Finding one book!");
-        var entity =  repository.findById(id).orElseThrow(() -> new ResourceNotFoundExeption(" No records found for this ID!"));
+        var entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundExeption(" No records found for this ID!"));
 
         BookDTO dto = DozerMapper.parseObject(entity, BookDTO.class);
         addHateoasLinks(dto);
         return dto;
     }
 
-    public BookDTO create(BookDTO book){
-        if(book == null){
+    public BookDTO create(BookDTO book) {
+        if (book == null) {
             throw new RequiredObjectIsNullExeption();
         }
 
@@ -57,8 +75,8 @@ public class BookServices {
         return dto;
     }
 
-    public BookDTO update(BookDTO book){
-        if(book == null){
+    public BookDTO update(BookDTO book) {
+        if (book == null) {
             throw new RequiredObjectIsNullExeption();
         }
 
@@ -76,7 +94,7 @@ public class BookServices {
         return dto;
     }
 
-    public void delete(Long id){
+    public void delete(Long id) {
         logger.info("Deleting one book!");
         var entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundExeption(" No records found for this ID!"));
         repository.delete(entity);
@@ -84,7 +102,7 @@ public class BookServices {
 
     private void addHateoasLinks(BookDTO dto) {
         dto.add(linkTo(methodOn(BookController.class).findById(dto.getKey())).withSelfRel().withType("GET"));
-        dto.add(linkTo(methodOn(BookController.class).findAll()).withRel("findAll").withType("GET"));
+        dto.add(linkTo(methodOn(BookController.class).findAll(1, 12, "asc")).withRel("findAll").withType("GET"));
         dto.add(linkTo(methodOn(BookController.class).create(dto)).withRel("create").withType("POST"));
         dto.add(linkTo(methodOn(BookController.class).update(dto)).withRel("update").withType("PUT"));
         dto.add(linkTo(methodOn(BookController.class).delete(dto.getKey())).withRel("delete").withType("DELETE"));

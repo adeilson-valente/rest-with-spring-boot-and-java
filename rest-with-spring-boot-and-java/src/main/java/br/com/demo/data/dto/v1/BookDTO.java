@@ -4,10 +4,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.github.dozermapper.core.Mapping;
 import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
 import java.io.Serializable;
 import java.util.Date;
 
+@Relation(collectionRelation = "books")
 @JsonPropertyOrder({"id", "author", "launchDate", "price", "title"})
 public class BookDTO extends RepresentationModel<BookDTO> implements Serializable {
     private  static  final long serialVersionUID = 1L;
