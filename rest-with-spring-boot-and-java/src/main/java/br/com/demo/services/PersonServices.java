@@ -6,8 +6,7 @@ import br.com.demo.exeptions.BadRequestExeption;
 import br.com.demo.exeptions.FileStorageExeption;
 import br.com.demo.exeptions.RequiredObjectIsNullExeption;
 import br.com.demo.exeptions.ResourceNotFoundExeption;
-import br.com.demo.file.exporter.MediaTypes;
-import br.com.demo.file.exporter.contract.FileExporter;
+import br.com.demo.file.exporter.contract.PersonExporter;
 import br.com.demo.file.exporter.factory.FileExporterFactory;
 import br.com.demo.file.importer.contract.FileImporter;
 import br.com.demo.file.importer.factory.FileImporterFactory;
@@ -33,7 +32,6 @@ import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Optional;
@@ -68,6 +66,20 @@ public class PersonServices {
         return buildPagedModel(pageable, people);
     }
 
+    public Resource exportPerson(Long id, String acceptHeader) {
+        logger.info("Exporting data of one person!");
+        var person = repository.findById(id)
+                .map(entity ->  DozerMapper.parseObject(entity, PersonDTO.class))
+                .orElseThrow(() -> new ResourceNotFoundExeption(" No records found for this ID!"));
+
+        try {
+            PersonExporter exporter = this.exporterFactory.getExporter(acceptHeader);
+            return exporter.exportPerson(person);
+        } catch (Exception e) {
+            throw new RuntimeException("Error during file export!", e);
+        }
+    }
+
     public PersonDTO findById(Long id) {
         logger.info("Finding one person!");
         var entity = repository.findById(id).orElseThrow(() -> new ResourceNotFoundExeption(" No records found for this ID!"));
@@ -83,10 +95,10 @@ public class PersonServices {
         var people = repository.findAll(pageable).map(person -> DozerMapper.parseObject(person, PersonDTO.class)).getContent();
 
         try {
-            FileExporter exporter = this.exporterFactory.getExporter(acceptHeader);
-            return exporter.exportFile(people);
+            PersonExporter exporter = this.exporterFactory.getExporter(acceptHeader);
+            return exporter.exportPeople(people);
         } catch (Exception e) {
-            throw new RuntimeException("Error during file export!",e);
+            throw new RuntimeException("Error during file export!", e);
         }
     }
 
@@ -138,7 +150,7 @@ public class PersonServices {
 
         logger.info("Updating one person!");
 
-        var entity = repository.findById(person.getKey()).orElseThrow(() -> new ResourceNotFoundExeption(" No records found for this ID!"));
+        var entity = repository.findById(person.getId()).orElseThrow(() -> new ResourceNotFoundExeption(" No records found for this ID!"));
 
         entity.setFirstName(person.getFirstName());
         entity.setLastName(person.getLastName());
@@ -184,12 +196,12 @@ public class PersonServices {
     private void addHateoasLinks(PersonDTO dto) {
         dto.add(linkTo(methodOn(PersonController.class).findAll(1, 12, "asc")).withRel("findAll").withType("GET"));
         dto.add(linkTo(methodOn(PersonController.class).findByName("", 1, 12, "asc")).withRel("findByName").withType("GET"));
-        dto.add(linkTo(methodOn(PersonController.class).findById(dto.getKey())).withSelfRel().withType("GET"));
+        dto.add(linkTo(methodOn(PersonController.class).findById(dto.getId())).withSelfRel().withType("GET"));
         dto.add(linkTo(methodOn(PersonController.class).create(dto)).withRel("create").withType("POST"));
         dto.add(linkTo(methodOn(PersonController.class)).slash("massCreation").withRel("massCreation").withType("POST"));
         dto.add(linkTo(methodOn(PersonController.class).update(dto)).withRel("update").withType("PUT"));
-        dto.add(linkTo(methodOn(PersonController.class).disablePerson(dto.getKey())).withRel("disable").withType("PATCH"));
-        dto.add(linkTo(methodOn(PersonController.class).delete(dto.getKey())).withRel("delete").withType("DELETE"));
+        dto.add(linkTo(methodOn(PersonController.class).disablePerson(dto.getId())).withRel("disable").withType("PATCH"));
+        dto.add(linkTo(methodOn(PersonController.class).delete(dto.getId())).withRel("delete").withType("DELETE"));
         dto.add(linkTo(methodOn(PersonController.class).exportPage(1, 12, "asc", null)).withRel("exportPage").withType("GET").withTitle("Export People"));
     }
 }

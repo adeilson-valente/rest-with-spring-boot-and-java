@@ -49,7 +49,7 @@ public class PersonServicesTest {
 
         var result = service.findById(1L);
         assertNotNull(result);
-        assertNotNull(result.getKey());
+        assertNotNull(result.getId());
         assertNotNull(result.getLinks());
 
         assertNotNull(result.getLinks().stream().anyMatch(link -> link.getRel().value().equals("self")
@@ -96,7 +96,7 @@ public class PersonServicesTest {
         var result = people.get(1);
 
         assertNotNull(result);
-        assertNotNull(result.getKey());
+        assertNotNull(result.getId());
         assertNotNull(result.getLinks());
         assertTrue(result.toString().contains("links"));
         assertEquals("Addres Test1", result.getAddress());
@@ -119,7 +119,7 @@ public class PersonServicesTest {
         var result = service.createPerson(dto);
 
         assertNotNull(result);
-        assertNotNull(result.getKey());
+        assertNotNull(result.getId());
         assertNotNull(result.getLinks());
         assertTrue(result.toString().contains("links:"));
         assertEquals("Addres Test1", result.getAddress());
@@ -136,7 +136,7 @@ public class PersonServicesTest {
         Person persisted = person;
 
         PersonDTO vo = input.mockDTO(1);
-        vo.setKey(1L);
+        vo.setId(1L);
 
         when(repository.findById(1L)).thenReturn(Optional.of(person));
         when(repository.save(person)).thenReturn(persisted);
@@ -144,7 +144,7 @@ public class PersonServicesTest {
         var result = service.updatePerson(vo);
 
         assertNotNull(result);
-        assertNotNull(result.getKey());
+        assertNotNull(result.getId());
         assertNotNull(result.getLinks());
         assertTrue(result.toString().contains("links"));
         assertEquals("Addres Test1", result.getAddress());
