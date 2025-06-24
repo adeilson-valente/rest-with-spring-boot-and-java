@@ -3,7 +3,7 @@ package br.com.demo.api.v1.controller;
 import br.com.demo.api.v1.docs.PersonControllerDocs;
 import br.com.demo.data.dto.PersonDTO;
 import br.com.demo.file.exporter.MediaTypes;
-import br.com.demo.services.PersonServices;
+import br.com.demo.services.PersonService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -32,7 +32,7 @@ import java.util.Map;
 @Tag(name = "People", description = "Endpoints for Managing People")
 public class PersonController implements PersonControllerDocs {
     @Autowired
-    private PersonServices service;
+    private PersonService service;
 
     @GetMapping(produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE})
     @Override

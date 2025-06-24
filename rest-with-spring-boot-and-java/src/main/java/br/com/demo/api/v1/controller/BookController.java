@@ -2,7 +2,7 @@ package br.com.demo.api.v1.controller;
 
 import br.com.demo.api.v1.docs.BookControllerDocs;
 import br.com.demo.data.dto.BookDTO;
-import br.com.demo.services.BookServices;
+import br.com.demo.services.BookService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Book", description = "Endpoints for Managing Book")
 public class BookController implements BookControllerDocs {
     @Autowired
-    private BookServices service;
+    private BookService service;
 
     @GetMapping(value = "/{id}", produces = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE, MediaType.APPLICATION_YAML_VALUE})
     @Override

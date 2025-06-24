@@ -2,11 +2,12 @@ package br.com.demo.model;
 
 import jakarta.persistence.*;
 
+import java.io.Serializable;
 import java.util.Date;
 
 @Entity
 @Table(name = "books")
-public class Book {
+public class Book implements Serializable {
     private  static  final long serialVersionUID = 1L;
 
     @Id

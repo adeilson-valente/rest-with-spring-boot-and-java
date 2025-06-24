@@ -4,7 +4,7 @@ import br.com.demo.data.dto.BookDTO;
 import br.com.demo.exeptions.RequiredObjectIsNullExeption;
 import br.com.demo.model.Book;
 import br.com.demo.repositories.BookRepository;
-import br.com.demo.services.BookServices;
+import br.com.demo.services.BookService;
 import br.com.demo.unitTests.mapper.mocks.MockBook;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -26,7 +26,7 @@ public class BookServicesTest {
     MockBook input;
 
     @InjectMocks
-    private BookServices service;
+    private BookService service;
 
     @Mock
     BookRepository repository;
