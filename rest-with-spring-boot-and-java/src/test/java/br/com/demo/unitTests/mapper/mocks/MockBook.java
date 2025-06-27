@@ -14,8 +14,8 @@ public class MockBook {
         return mockEntity(0);
     }
     
-    public BookDTO mockVO() {
-        return mockVO(0);
+    public BookDTO mockDTO() {
+        return mockDTO(0);
     }
     
     public List<Book> mockEntityList() {
@@ -26,10 +26,10 @@ public class MockBook {
         return books;
     }
 
-    public List<BookDTO> mockVOList() {
+    public List<BookDTO> mockDTOList() {
         List<BookDTO> books = new ArrayList<>();
         for (int i = 0; i < 14; i++) {
-            books.add(mockVO(i));
+            books.add(mockDTO(i));
         }
         return books;
     }
@@ -44,7 +44,7 @@ public class MockBook {
         return book;
     }
 
-    public BookDTO mockVO(Integer number) {
+    public BookDTO mockDTO(Integer number) {
         BookDTO book = new BookDTO();
         book.setKey(number.longValue());
         book.setAuthor("Some Author" + number);

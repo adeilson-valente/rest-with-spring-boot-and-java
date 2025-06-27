@@ -7,7 +7,6 @@ import br.com.demo.repositories.PersonRepository;
 import br.com.demo.services.PersonService;
 import br.com.demo.unitTests.mapper.mocks.MockPerson;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -15,10 +14,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.Link;
+import org.springframework.hateoas.PagedModel;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -33,6 +40,9 @@ public class PersonServicesTest {
 
     @Mock
     PersonRepository repository;
+
+    @Mock
+    PagedResourcesAssembler<PersonDTO> assembler;
 
     @BeforeEach
     void setUpMocks() throws Exception {
@@ -80,29 +90,46 @@ public class PersonServicesTest {
     }
 
     @Test
-    @Disabled("REASON: Still Under Development")
-    void testFindAll() {
-        List<Person> list = input.mockEntityList();
+    void findAll() {
 
-        when(repository.findAll()).thenReturn(list);
-        List<PersonDTO> people = new ArrayList<>();
+        // Mocking repository access
+        List<Person> mockEntityList = input.mockEntityList();
+        Page<Person> mockPage = new PageImpl<>(mockEntityList);
+        when(repository.findAll(any(Pageable.class))).thenReturn(mockPage);
 
-        //var people = service.findAll();
+        List<PersonDTO> mockDtoList = input.mockDTOList();
+
+        // Mocking assembler
+        // assembler.toModel(peopleWithLinks, findAllLink);
+        List<EntityModel<PersonDTO>> entityModels = mockDtoList.stream()
+                .map(EntityModel::of)
+                .collect(Collectors.toList());
+
+        PagedModel.PageMetadata pageMetadata = new PagedModel.PageMetadata(
+                mockPage.getSize(),
+                mockPage.getNumber(),
+                mockPage.getTotalElements(),
+                mockPage.getTotalPages()
+        );
+
+        PagedModel<EntityModel<PersonDTO>> mockPagedModel = PagedModel.of(entityModels, pageMetadata);
+        when(assembler.toModel(any(Page.class), any(Link.class))).thenReturn(mockPagedModel);
+
+
+        // Executing fid all
+        PagedModel<EntityModel<PersonDTO>> result = service.findAll(PageRequest.of(0, 14));
+
+        List<PersonDTO> people = result.getContent()
+                .stream()
+                .map(EntityModel::getContent)
+                .collect(Collectors.toList());
 
         assertNotNull(people);
         assertEquals(14, people.size());
 
-        //Validando dados da pessoa 1
-        var result = people.get(1);
-
-        assertNotNull(result);
-        assertNotNull(result.getId());
-        assertNotNull(result.getLinks());
-        assertTrue(result.toString().contains("links"));
-        assertEquals("Addres Test1", result.getAddress());
-        assertEquals("First Name Test1", result.getFirstName());
-        assertEquals("Last Name Test1", result.getLastName());
-        assertEquals("Female", result.getGender());
+        validateIndividualPerson(people.get(1), 1);
+        validateIndividualPerson(people.get(4), 4);
+        validateIndividualPerson(people.get(7), 7);
     }
 
     @Test
@@ -189,5 +216,50 @@ public class PersonServicesTest {
         String actualMessage = exception.getMessage();
 
         assertTrue(actualMessage.contains(expectedMessage));
+    }
+
+    private static void validateIndividualPerson(PersonDTO person, int i) {
+        assertNotNull(person);
+        assertNotNull(person.getId());
+        assertNotNull(person.getLinks());
+
+        assertNotNull(person.getLinks().stream()
+                .anyMatch(link -> link.getRel().value().equals("self")
+                        && link.getHref().endsWith("/api/person/v1/" + i)
+                        && link.getType().equals("GET")
+                ));
+
+        assertNotNull(person.getLinks().stream()
+                .anyMatch(link -> link.getRel().value().equals("findAll")
+                        && link.getHref().endsWith("/api/person/v1")
+                        && link.getType().equals("GET")
+                )
+        );
+
+        assertNotNull(person.getLinks().stream()
+                .anyMatch(link -> link.getRel().value().equals("create")
+                        && link.getHref().endsWith("/api/person/v1")
+                        && link.getType().equals("POST")
+                )
+        );
+
+        assertNotNull(person.getLinks().stream()
+                .anyMatch(link -> link.getRel().value().equals("update")
+                        && link.getHref().endsWith("/api/person/v1")
+                        && link.getType().equals("PUT")
+                )
+        );
+
+        assertNotNull(person.getLinks().stream()
+                .anyMatch(link -> link.getRel().value().equals("delete")
+                        && link.getHref().endsWith("/api/person/v1/" + i)
+                        && link.getType().equals("DELETE")
+                )
+        );
+
+        assertEquals("Addres Test" + i, person.getAddress());
+        assertEquals("First Name Test" + i, person.getFirstName());
+        assertEquals("Last Name Test" + i, person.getLastName());
+        assertEquals(((i % 2)==0) ? "Male" : "Female", person.getGender());
     }
 }
