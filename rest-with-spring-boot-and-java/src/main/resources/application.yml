@@ -1,3 +1,5 @@
+server:
+  port: 80
 file:
   upload-dir: D:\upload
 email:
