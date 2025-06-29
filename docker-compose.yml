@@ -15,7 +15,7 @@ services:
     networks:
       - network
   rest-with-spring-boot-and-java:
-    image: rest-with-spring-boot-and-java
+    image: adeilsonvalente/rest-with-spring-boot-and-java
     restart: always
     build: ./rest-with-spring-boot-and-java
     working_dir: /rest-with-spring-boot-and-java
